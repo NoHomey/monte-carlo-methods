@@ -5,6 +5,7 @@ import Exam1Task2
 import qualified Matrix as M
 import qualified BinaryTree as BinTree
 import Data.Ratio
+import Data.List
 
 info :: [Square]
 info = map increase
@@ -65,7 +66,7 @@ printMatrix m = mapM_ showLine $ M.matrix m
     where showLine line = (mapM_ (putStr . (showQ "\t\t")) line) >> (putChar '\n')
 
 printMatrixForMathematica :: (Foldable t) => M.Matrix t Rational -> IO ()
-printMatrixForMathematica m =  (putChar '{') >> (mapM_ showLine $ M.matrix m) >> (putChar '}')
+printMatrixForMathematica m =  (putChar '{') >> (mapM_ showLine $ M.matrix m) >> (putStrLn "}")
     where showLine line = (putChar '{') >> (mapM_ (putStr . (showQ ", ")) line) >> (putStr "}, ")
 
 p :: Vector Rational
@@ -74,10 +75,16 @@ p = BinTree.listToTree [5, 10, 5, 10, 25, 60]
 q :: Matrix Rational
 q = squareMapMatrix info (1 % 4, 1 % 4, 1 % 4, 1 % 4)
 
+a :: M.Matrix [] Rational
+a = M.matrixConvert $ M.Matrix $ BinTree.indexMap (\(i, row) -> BinTree.indexMap (\(j, e) -> if i == j then e - 1 else e) row) $ M.matrix indexedMatrix
+
+at :: M.Matrix [] Rational
+at = M.Matrix $ transpose $ M.matrix a
+
 main = do
          printMatrix matrix
          putStrLn ""
-         printMatrixForMathematica matrix
+         printMatrixForMathematica at
          putStrLn ""
          putStrLn $ showQ "" $ task1B matrix 2 (2, 4)
          putStrLn ""
