@@ -8,16 +8,18 @@ data Tree k v =
     Node (k, v) (Tree k v) (Tree k v) deriving Show
 
 instance Functor (Tree k) where
-    fmap _ Empty                        = Empty
-    fmap f (Node (key, val) left right) = Node (key, f val) (fmap f left) (fmap f right)
+    fmap f = indexMap (\(_, val) -> f val)
 
 instance Foldable (Tree k) where
-    foldr _ accum Empty                      = accum
-    foldr f accum (Node (_, val) left right) = foldr f (f val $ foldr f accum right) left
+    foldr f = indexFold (\(_, val) accum -> f val accum)
 
 indexMap :: ((k, x) -> y) -> Tree k x -> Tree k y
-indexMap _ Empty                        = Empty
-indexMap f (Node (key, val) left right) = Node (key, f (key, val)) (indexMap f left) (indexMap f right)
+indexMap _ Empty                             = Empty
+indexMap f (Node info@(key, val) left right) = Node (key, f info) (indexMap f left) (indexMap f right)
+
+indexFold :: ((k, v) -> a -> a) -> a -> Tree k v -> a
+indexFold _ accum Empty                  = accum
+indexFold f accum (Node info left right) = indexFold f (f info $ indexFold f accum right) left
 
 intervalTree :: (Integral i) => i -> i -> Tree i (Maybe v)
 intervalTree a b | a == b    = Node (a, Nothing) Empty Empty

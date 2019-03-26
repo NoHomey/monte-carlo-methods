@@ -55,26 +55,18 @@ indexedMatrix = squareMapMatrix info probs
 matrix :: M.Matrix [] Rational
 matrix = task1A indexedMatrix
 
-showQ :: Rational -> String
-showQ q = let a = numerator q
-              b = denominator q
-          in (if b == 1 then show a else (show a) ++ "/" ++ (show b)) ++ "\t\t"
+showQ :: String -> Rational -> String
+showQ del q = let a = numerator q
+                  b = denominator q
+              in (if b == 1 then show a else (show a) ++ "/" ++ (show b)) ++ del
 
 printMatrix :: (Foldable t) => M.Matrix t Rational -> IO ()
 printMatrix m = mapM_ showLine $ M.matrix m
-    where showLine line = (mapM_ (putStr . showQ) line) >> (putChar '\n')
+    where showLine line = (mapM_ (putStr . (showQ "\t\t")) line) >> (putChar '\n')
 
-{-p :: Vector Rational
-p = BinTree.listToTree [1 % 10, 1 % 5, 3 % 10, 2 % 5]
-
-q :: Matrix Rational
-q = M.matrixConvert $ M.Matrix
-    [ [ 1 % 5, 1 % 5, 3 % 10, 3 % 10 ]
-    , [ 1 % 5, 1 % 5, 3 % 10, 3 % 10 ]
-    , [ 1 % 10, 1 % 10, 1 % 2, 3 % 10 ]
-    , [ 2 % 5, 1 % 5, 1 % 10, 3 % 10 ]
-    ]
--}
+printMatrixForMathematica :: (Foldable t) => M.Matrix t Rational -> IO ()
+printMatrixForMathematica m =  (putChar '{') >> (mapM_ showLine $ M.matrix m) >> (putChar '}')
+    where showLine line = (putChar '{') >> (mapM_ (putStr . (showQ ", ")) line) >> (putStr "}, ")
 
 p :: Vector Rational
 p = BinTree.listToTree [5, 10, 5, 10, 25, 60]
@@ -85,8 +77,10 @@ q = squareMapMatrix info (1 % 4, 1 % 4, 1 % 4, 1 % 4)
 main = do
          printMatrix matrix
          putStrLn ""
-         putStrLn $ showQ $ task1B matrix 2 (2, 4)
+         printMatrixForMathematica matrix
          putStrLn ""
-         putStrLn $ showQ $ task1B matrix 3 (2, 4)
+         putStrLn $ showQ "" $ task1B matrix 2 (2, 4)
+         putStrLn ""
+         putStrLn $ showQ "" $ task1B matrix 3 (2, 4)
          putStrLn ""
          printMatrix $ task2 q p
