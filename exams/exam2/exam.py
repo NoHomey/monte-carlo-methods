@@ -2,10 +2,11 @@ from build_matrix import build_matrix
 from metropolis_hastings import metropolis_hastings
 from stat_dist import stat_dist
 from rejection_rates import rejection_rates
+from roundf import roundf
 
 def printMatrix(m):
     for row in m:
-        print([round(x, 3) for x in row])
+        print([roundf(x) for x in row])
 
 # right, up, left, down
 ns = [ [None, 1   , None, None]

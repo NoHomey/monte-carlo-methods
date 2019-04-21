@@ -1,5 +1,6 @@
 from is_zero import is_zero 
 from numpy import random
+from roundf import roundf
 
 def prob_info(m):
     info = [[] for i in range(len(m))]
@@ -22,4 +23,4 @@ def rejection_rates(m):
         if a < p:
             state = x
             history[x][0] += 1
-    return [round((t - a) / t, 3) for [a, t] in history]
+    return [roundf((t - a) / t) for [a, t] in history]
