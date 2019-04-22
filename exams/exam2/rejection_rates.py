@@ -6,7 +6,7 @@ def prob_info(m):
     info = [[] for i in range(len(m))]
     for i, row in enumerate(m):
         for j, p in enumerate(row):
-            if not is_zero(p):
+            if j != i and not is_zero(p):
                 info[i].append((j, p))
     return info
 

@@ -23,7 +23,7 @@ ps = [7, 5, 4, 1, 5, 7]
 qM = build_matrix(ns, [0.25, 0.25, 0.25, 0.25])
 
 # right, up, left, down
-qMH = build_matrix(ns, [0.1, 0.4, 0.4, 0.1])
+qMH = build_matrix(ns, [0.1, 0.1, 0.7, 0.1])
 
 m = metropolis_hastings(ps, qM)
 
